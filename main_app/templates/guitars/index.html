@@ -5,6 +5,7 @@
 
 {% for guitar in guitars %}
   <div class="card">
+    <a href="{% url 'detail cat.id %}">
     <div class="card-content">
       <span class="card-title">{{ guitar.brand }}</span>
       <p>Breed: {{ guitar.model }}</p>
@@ -15,6 +16,7 @@
         <p>Age: modern</p>
       {% endif %}
     </div>
+    </a>
   </div>
 {% endfor %}
 

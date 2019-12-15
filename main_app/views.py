@@ -1,25 +1,20 @@
 from django.shortcuts import render
-from django.http import HttpResponse
+from .models import Guitar
+
 # Create your views here.
 
-class Guitar:
-    def __init__(self, brand, model, description, year):
-        self.brand = brand
-        self.model = model
-        self.description = description
-        self.year = year
-        
-guitars = [
-    Guitar('Gibson', 'ES125', 'pickguard missing and headstock repair', 1951),
-    Guitar('Fender', 'Musicmaster', 'Red with White scratchplate', 1974),
-    Guitar('Fender', 'P-Bass', 'Honey blonde with gold metal scratch plate', 2018),
-]
 
 def home(request):
-    return HttpResponse('<h1>Hello /ᐠ｡‸｡ᐟ\ﾉ</h1>')
+    return render(request, 'home.html')
 
 def about(request):
     return render(request, 'about.html')
 
 def guitars_index(request):
-  return render(request, 'guitars/index.html', { 'guitars': guitars })
+    guitars = Guitar.objects.all()
+    return render(request, 'guitars/index.html', { 'guitars': guitars })
+
+def guitars_detail(request, guitar_id):
+    guitar = Guitar.objects.get(id=guitar_id)
+    return render(request, 'guitars/detail.html', { 'guitar' : guitar })
+

@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h1>Guitar Details</h1>
+
+<div class="card">
+  <div class="card-content">
+    <span class="card-title">{{ guitar.brand }}</span>
+    <p>Model: {{ guitar.model }}</p>
+    <p>Description: {{ guitar.description }}</p>
+    {% if guitar.year < 1990 %}
+      <p>year: {{ guitar.year }} / vintage</p>
+    {% else %}
+      <p>year: {{ guitar.year }}</p>
+    {% endif %}
+  </div>
+</div>
+
+{% endblock %}
