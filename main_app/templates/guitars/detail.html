@@ -14,6 +14,10 @@
       <p>year: {{ guitar.year }}</p>
     {% endif %}
   </div>
+  <div class="card-action">
+    <a href="{% url 'guitars_update' guitar.id %}">Edit Guitar</a>
+    <a href="{% url 'guitars_delete' guitar.id %}">Delete Guitar</a>
+  </div>
 </div>
 
 {% endblock %}
