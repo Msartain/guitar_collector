@@ -3,21 +3,59 @@
 
 <h1>Guitar Details</h1>
 
-<div class="card">
-  <div class="card-content">
-    <span class="card-title">{{ guitar.brand }}</span>
-    <p>Model: {{ guitar.model }}</p>
-    <p>Description: {{ guitar.description }}</p>
-    {% if guitar.year < 1990 %}
-      <p>year: {{ guitar.year }} / vintage</p>
-    {% else %}
-      <p>year: {{ guitar.year }}</p>
-    {% endif %}
+<div class="row">
+  <div class="col s6">
+    <div class="card">
+      <div class="card-content">
+        <span class="card-title">{{ guitar.brand }}</span>
+        <p>Model: {{ guitar.model }}</p>
+        <p>Description: {{ guitar.description }}</p>
+        {% if guitar.year < 1990 %}
+          <p>year: {{ guitar.year }} / vintage</p>
+        {% else %}
+          <p>year: {{ guitar.year }}</p>
+        {% endif %}
+      </div>
+      <div class="card-action">
+        <a href="{% url 'guitars_update' guitar.id %}">Edit Guitar</a>
+        <a href="{% url 'guitars_delete' guitar.id %}">Delete Guitar</a>
+      </div>
+    </div>
   </div>
-  <div class="card-action">
-    <a href="{% url 'guitars_update' guitar.id %}">Edit Guitar</a>
-    <a href="{% url 'guitars_delete' guitar.id %}">Delete Guitar</a>
+  <div class="col s6">
+    <form action="{% url 'add_restring' guitar.id %}"method="post">
+      {% csrf_token %}
+      {{ restring_form.as_p }}
+      <input type="submit" class="btn" value="Add Restring">
+    </form>
+    <table class="striped">
+      <thead>
+        <tr><th>Date</th><th>Strings</th></tr>
+      </thead>
+      <tbody>
+        {% for restring in guitar.restring_set.all %}
+          <tr>
+            <td>{{restring.date}}</td>
+            <td>{{restring.get_brand_display}}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
   </div>
 </div>
+
+<script>
+  let dateEl = document.getElementById('id_date');
+  M.Datepicker.init(dateEl, {
+    format: 'yyyy-mm-dd',
+    defaultDate: new Date(),
+    setDefaultDate: true,
+    autoClose: true
+  });
+
+  let selectEl = document.getElementById('id_brand');
+  M.FormSelect.init(selectEl);
+
+</script>
 
 {% endblock %}
