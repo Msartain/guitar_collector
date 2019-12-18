@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
-from .models import Guitar
+from django.views.generic import ListView, DetailView
+from .models import Guitar, Amp
 from .forms import RestringForm
 
 # Create your views here.
@@ -18,10 +19,12 @@ def guitars_index(request):
 
 def guitars_detail(request, guitar_id):
     guitar = Guitar.objects.get(id=guitar_id)
+    amps_guitar_doesnt_have = Amp.objects.exclude(id__in = guitar.amps.all().values_list('id'))
     restring_form = RestringForm()
     return render(request, 'guitars/detail.html', { 
         'guitar' : guitar,
-        'restring_form': restring_form 
+        'restring_form': restring_form,
+        'amps': amps_guitar_doesnt_have
         })
     
 
@@ -45,3 +48,29 @@ def add_restring(request, guitar_id):
         new_restring.guitar_id = guitar_id
         new_restring.save()
         return redirect('detail', guitar_id=guitar_id)
+    
+def assoc_amp(request, guitar_id, amp_id):
+    Guitar.objects.get(id=guitar_id).amps.add(amp_id)
+    return redirect('detail', guitar_id=guitar_id)
+
+def unassoc_amp(request, guitar_id, amp_id):
+    Guitar.objects.get(id=guitar_id).amps.remove(amp_id)
+    return redirect('detail', guitar_id=guitar_id)
+    
+class AmpList(ListView):
+  model = Amp
+
+class AmpDetail(DetailView):
+  model = Amp
+
+class AmpCreate(CreateView):
+  model = Amp
+  fields = '__all__'
+
+class AmpUpdate(UpdateView):
+  model = Amp
+  fields = ['brand', 'model']
+
+class AmpDelete(DeleteView):
+  model = Amp
+  success_url = '/amps/'

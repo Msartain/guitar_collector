@@ -28,6 +28,12 @@
       {{ restring_form.as_p }}
       <input type="submit" class="btn" value="Add Restring">
     </form>
+    <br>
+    {% if guitar.restrung_recently %}
+      <div class="card-panel teal-text center-align">{{guitar.brand}} {{guitar.model}} has been restrung recently and should be sounding sweet!</div>
+    {% else %}
+      <div class="card-panel red-text center-align">{{guitar.brand}} {{guitar.model}} might be needing a restring.</div>
+    {% endif %}
     <table class="striped">
       <thead>
         <tr><th>Date</th><th>Strings</th></tr>
@@ -41,6 +47,53 @@
         {% endfor %}
       </tbody>
     </table>
+  </div>
+</div>
+<hr>
+<div class="row">
+  <div class="col s6">
+    <h3>A {{ guitar.brand }} {{ guitar.model }}'s perfect amps.</h3>
+    {% if guitar.amps.count %}
+      {% for amp in guitar.amps.all %}
+        <div class="card">
+          <div class="card-content">
+            <span class="card-title">
+              A {{ amp.brand }} {{ amp.model }}
+            </span>
+          </div>
+          <div class="card-action">
+            <form action="{% url 'unassoc_amp' guitar.id amp.id %}" method="post">
+                {% csrf_token %}
+              <button type="submit" class="btn">Remove</button>
+            </form>
+          </div>
+        </div>
+      {% endfor %}
+    {% else %}
+      <h5>No Amps :(</h5>
+    {% endif %}
+  </div>
+  <div class="col s6">
+    <h3>Available Amps</h3>
+    {% if amps.count %}
+      {% for amp in amps.all %}
+        <div class="card">
+          <div class="card-content">
+            <span class="card-title">
+              A {{ amp.brand }} {{ amp.model }}
+            </span>
+          </div>
+          <div class="card-action">
+            <form action="{% url 'assoc_amp' guitar.id amp.id %}" method="post">
+              {% csrf_token %}
+              <button type="submit" class="btn">Add</button>
+            </form>
+          </div>
+        </div>
+      {% endfor %}
+    {% else %}
+      <h5>{{ guitar.brand }} {{ guitar.model }} Already Has All Toys Available</h5>
+    {% endif %}
   </div>
 </div>
 
