@@ -1,6 +1,7 @@
 from django.db import models
 from django.urls import reverse
 from datetime import date
+from django.contrib.auth.models import User
 
 STRINGS = (
     ('Dad', 'Daddario'),
@@ -17,7 +18,7 @@ class Amp(models.Model):
         return self.brand
     
     def get_absolute_url(self):
-        return reverse('toys_detail', kwargs={'pk': self.id})
+        return reverse('amps_detail', kwargs={'pk': self.id})
 
 class Guitar(models.Model):
     brand = models.CharField(max_length=50)
@@ -25,6 +26,7 @@ class Guitar(models.Model):
     description = models.TextField(max_length=250)
     year = models.IntegerField()
     amps = models.ManyToManyField(Amp)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     
     def __str__(self):
         return f'{self.brand} {self.model} ({self.id})'
@@ -53,3 +55,10 @@ class Restring(models.Model):
     
     class Meta:
         ordering = ['-date']
+
+class Photo(models.Model):
+    url = models.CharField(max_length=200)
+    guitar = models.ForeignKey(Guitar, on_delete=models.CASCADE)
+    
+    def __str__(self):
+        return f'Photo for guitar_id: {self.guitar_id} @{self.url}'
